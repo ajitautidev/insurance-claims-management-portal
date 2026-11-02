@@ -1,0 +1,39 @@
+.policy-management {
+  min-height: 100%;
+  background: #f8fafc;
+}
+
+.module-header {
+  padding: 24px 28px 12px;
+}
+
+.module-header h1 {
+  margin: 0 0 8px;
+  color: #1e293b;
+}
+
+.module-header p {
+  color: #64748b;
+}
+
+.module-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 28px;
+  border-bottom: 1px solid #e2e8f0;
+  background: white;
+}
+
+.module-nav a {
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #475569;
+  text-decoration: none;
+}
+
+.module-nav a.active {
+  color: #1d4ed8;
+  background: #dbeafe;
+  font-weight: 600;
+}
