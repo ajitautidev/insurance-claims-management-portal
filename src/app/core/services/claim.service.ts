@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, of } from 'rxjs';
 
 import { Claim, ClaimStatus } from '../models/claim.model';
+import { UploadedDocument } from '../models/uploaded-document.model';
 import { Storage } from './storage';
 
 const CLAIM_STORAGE_KEY = 'insurance-claims-portal.claims';
@@ -57,6 +58,23 @@ export class ClaimService {
   ): Observable<Claim | undefined> {
     const updatedClaims = this.claimsSubject.value.map(claim =>
       claim.id === id ? { ...claim, status } : claim
+    );
+
+    this.storage.setItem(CLAIM_STORAGE_KEY, updatedClaims);
+    this.claimsSubject.next(updatedClaims);
+
+    return this.getClaimById(id);
+  }
+
+  // NEW: Update supporting documents for an existing claim
+  updateClaimDocuments(
+    id: number,
+    documents: UploadedDocument[]
+  ): Observable<Claim | undefined> {
+    const updatedClaims = this.claimsSubject.value.map(claim =>
+      claim.id === id
+        ? { ...claim, documents: [...documents] }
+        : claim
     );
 
     this.storage.setItem(CLAIM_STORAGE_KEY, updatedClaims);
