@@ -1,0 +1,37 @@
+
+<div class="dashboard-container">
+  <h2>Risk & Admin Dashboard</h2>
+  <p class="subtitle">Overview of insurance claims and financial exposure</p>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Total Claims</h3>
+      <p>{{ totalClaims }}</p>
+    </div>
+
+    <div class="stat-card approved">
+      <h3>Approved Claims</h3>
+      <p>{{ approvedClaims }}</p>
+    </div>
+
+    <div class="stat-card rejected">
+      <h3>Rejected Claims</h3>
+      <p>{{ rejectedClaims }}</p>
+    </div>
+
+    <div class="stat-card review">
+      <h3>Under Review</h3>
+      <p>{{ underReviewClaims }}</p>
+    </div>
+
+    <div class="stat-card submitted">
+      <h3>Submitted Claims</h3>
+      <p>{{ submittedClaims }}</p>
+    </div>
+
+    <div class="stat-card amount">
+      <h3>Total Claim Amount</h3>
+      <p>{{ totalClaimAmount | currency:'INR':'symbol':'1.0-0' }}</p>
+    </div>
+  </div>
+</div>

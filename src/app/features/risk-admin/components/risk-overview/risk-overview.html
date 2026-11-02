@@ -1,0 +1,88 @@
+
+<div class="risk-container">
+  <h2>Risk Overview</h2>
+  <p class="subtitle">
+    Basic indicators calculated from available claim records
+  </p>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <h3>High-Value Claims</h3>
+      <p>{{ highValueClaims.length }}</p>
+    </div>
+
+    <div class="summary-card">
+      <h3>High-Value Claim Amount</h3>
+      <p>{{ totalHighValueAmount | currency:'INR':'symbol':'1.0-0' }}</p>
+    </div>
+  </div>
+
+  <section class="section-card">
+    <h3>High-Value Claims</h3>
+
+    <p *ngIf="highValueClaims.length === 0" class="empty">
+      No claims meet the high-value threshold.
+    </p>
+
+    <div class="table-wrapper" *ngIf="highValueClaims.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Claim Number</th>
+            <th>Customer</th>
+            <th>Claim Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let claim of highValueClaims">
+            <td>{{ claim.claimNumber }}</td>
+            <td>{{ claim.customerName }}</td>
+            <td>{{ claim.claimAmount | currency:'INR':'symbol':'1.0-0' }}</td>
+            <td>{{ claim.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section-card">
+    <h3>Claims by Policy Category</h3>
+
+    <p *ngIf="categorySummary.length === 0" class="empty">
+      No category information is available.
+    </p>
+
+    <div class="table-wrapper" *ngIf="categorySummary.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Policy Category</th>
+            <th>Number of Claims</th>
+            <th>Indicator</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of categorySummary">
+            <td>{{ item.category }}</td>
+            <td>{{ item.count }}</td>
+            <td>
+              <span
+                [class.high]="item.highVolume"
+                [class.normal]="!item.highVolume">
+                {{ item.highVolume ? 'Above Average Volume' : 'Normal Volume' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="disclaimer">
+    These indicators use mock claim data. They do not establish fraud
+    or predict actual risk.
+  </p>
+</div>

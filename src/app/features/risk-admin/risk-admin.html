@@ -1,1 +1,114 @@
-<p>risk-admin works!</p>
+<div class="dashboard-container">
+
+  <!-- Top Navigation -->
+  <nav class="top-navbar">
+    <div class="brand">
+      <div class="brand-icon">INS</div>
+      <div>
+        <h2>Insure<span>Pro</span></h2>
+        <small>Insurance Management</small>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <span class="live-status">
+        <span class="status-dot"></span>
+        System Active
+      </span>
+      <div class="admin-profile">
+        <div class="avatar">A</div>
+        <div>
+          <strong>Administrator</strong>
+          <small>Risk Management</small>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Header -->
+  <header class="hero-section">
+    <div class="hero-content">
+      <span class="welcome-tag">ADMINISTRATION PANEL</span>
+      <h1>Risk & Admin Dashboard</h1>
+      <p>
+        Monitor insurance claims, analyze risk patterns
+        and manage reports from one place.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="#analytics" class="primary-btn">
+          View Analytics →
+        </a>
+        <a href="#reports" class="secondary-btn">
+          View Reports
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-decoration">
+      <div class="circle circle-one"></div>
+      <div class="circle circle-two"></div>
+      <div class="hero-symbol">✦</div>
+    </div>
+  </header>
+
+  <!-- Dashboard Content -->
+  <main class="main-content">
+
+    <section class="section-block" id="dashboard">
+      <div class="section-heading">
+        <div>
+          <span class="section-label">OVERVIEW</span>
+          <h2>Dashboard Summary</h2>
+          <p>Important claim statistics at a glance.</p>
+        </div>
+      </div>
+
+      <app-risk-dashboard></app-risk-dashboard>
+    </section>
+
+    <section class="section-block" id="analytics">
+      <div class="section-heading">
+        <div>
+          <span class="section-label">PERFORMANCE INSIGHTS</span>
+          <h2>Claims Analytics</h2>
+          <p>Understand claim trends and distributions.</p>
+        </div>
+      </div>
+
+      <app-claims-analytics></app-claims-analytics>
+    </section>
+
+    <section class="section-block" id="risk">
+      <div class="section-heading">
+        <div>
+          <span class="section-label">RISK MONITORING</span>
+          <h2>Risk Overview</h2>
+          <p>Review high-value claims and category indicators.</p>
+        </div>
+      </div>
+
+      <app-risk-overview></app-risk-overview>
+    </section>
+
+    <section class="section-block" id="reports">
+      <div class="section-heading">
+        <div>
+          <span class="section-label">REPORT CENTER</span>
+          <h2>Admin Reports</h2>
+          <p>Filter, review and export claim reports.</p>
+        </div>
+      </div>
+
+      <app-admin-reports></app-admin-reports>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="dashboard-footer">
+    <p>© 2026 InsurePro. Insurance Claims Management Portal.</p>
+    <span>Risk & Admin Module</span>
+  </footer>
+
+</div>
