@@ -1,34 +1,46 @@
 import { Routes } from '@angular/router';
 
 import { PolicyManagement } from './features/policy-management/policy-management';
-import { ClaimsSubmission } from './features/claims-submission/claims-submission';
-import { ClaimsReview } from './features/claims-review/claims-review';
-import { RiskAdmin } from './features/risk-admin/risk-admin';
+
+import { PolicyCatalogue } from './features/policy-management/components/policy-catalogue/policy-catalogue';
+
+import { PolicyDetails } from './features/policy-management/components/policy-details/policy-details';
+
+import { QuoteGeneration } from './features/policy-management/components/quote-generation/quote-generation';
+
+import { CustomerProfiles } from './features/policy-management/components/customer-profiles/customer-profiles';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'policies',
-    pathMatch: 'full',
-  },
-  {
     path: 'policies',
     component: PolicyManagement,
+    children: [
+      {
+        path: '',
+        redirectTo: 'catalogue',
+        pathMatch: 'full'
+      },
+      {
+        path: 'catalogue',
+        component: PolicyCatalogue
+      },
+      {
+        path: 'quote-generation',
+        component: QuoteGeneration
+      },
+      {
+        path: 'customers',
+        component: CustomerProfiles
+      },
+      {
+        path: ':id',
+        component: PolicyDetails
+      }
+    ]
   },
   {
-    path: 'claims/submit',
-    component: ClaimsSubmission,
-  },
-  {
-    path: 'claims/review',
-    component: ClaimsReview,
-  },
-  {
-    path: 'risk',
-    component: RiskAdmin,
-  },
-  {
-    path: '**',
+    path: '',
     redirectTo: 'policies',
-  },
+    pathMatch: 'full'
+  }
 ];
