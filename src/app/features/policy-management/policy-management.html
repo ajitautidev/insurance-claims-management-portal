@@ -1,1 +1,26 @@
-<p>policy-management works!</p>
+<div class="policy-management">
+  <header class="module-header">
+    <div>
+      <h1>Policy Management</h1>
+      <p>Manage insurance policies, quotations and customer profiles.</p>
+    </div>
+  </header>
+
+  <nav class="module-nav">
+    <a routerLink="catalogue" routerLinkActive="active">
+      Policy Catalogue
+    </a>
+
+    <a routerLink="quote-generation" routerLinkActive="active">
+      Generate Quote
+    </a>
+
+    <a routerLink="customers" routerLinkActive="active">
+      Customer Profiles
+    </a>
+  </nav>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>

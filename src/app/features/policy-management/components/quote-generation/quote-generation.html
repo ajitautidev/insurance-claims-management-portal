@@ -1,1 +1,251 @@
-<p>quote-generation works!</p>
+
+<div class="quote-container">
+
+  <div class="page-header">
+    <div>
+      <h1>Generate Insurance Quote</h1>
+      <p>Choose an insurance policy and enter customer details to generate a quotation.</p>
+    </div>
+  </div>
+
+  <div class="quote-layout">
+
+    <form class="quote-form" #quoteForm="ngForm"
+          (ngSubmit)="generateQuote()">
+
+      <!-- Policy Selection -->
+      <section class="form-section">
+
+        <h2>1. Select Insurance Policy</h2>
+
+        <div class="form-group">
+          <label for="policy">Select Policy *</label>
+
+          <select
+            id="policy"
+            name="policy"
+            [(ngModel)]="selectedPolicyId"
+            (ngModelChange)="onPolicyChange()"
+            required>
+
+            <option [ngValue]="null" disabled>
+              Select an insurance policy
+            </option>
+
+            <option
+              *ngFor="let policy of policies"
+              [ngValue]="policy.id">
+
+              {{ policy.policyName }} - {{ policy.policyNumber }}
+
+            </option>
+
+          </select>
+
+          <p class="empty-message" *ngIf="policies.length === 0">
+            No policies available. Please check your policy data.
+          </p>
+        </div>
+
+        <div class="policy-preview" *ngIf="selectedPolicy">
+
+          <h3>{{ selectedPolicy.policyName }}</h3>
+
+          <div class="preview-grid">
+
+            <div>
+              <span>Policy Number</span>
+              <strong>{{ selectedPolicy.policyNumber }}</strong>
+            </div>
+
+            <div>
+              <span>Category</span>
+              <strong>{{ selectedPolicy.category }}</strong>
+            </div>
+
+            <div>
+              <span>Coverage Amount</span>
+              <strong>{{ selectedPolicy.coverageAmount | currency:'INR' }}</strong>
+            </div>
+
+            <div>
+              <span>Base Premium</span>
+              <strong>{{ selectedPolicy.premium | currency:'INR' }}</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Customer Details -->
+      <section class="form-section">
+
+        <h2>2. Customer Information</h2>
+
+        <div class="form-group">
+          <label for="customerName">Full Name *</label>
+
+          <input
+            type="text"
+            id="customerName"
+            name="customerName"
+            [(ngModel)]="customerName"
+            placeholder="Enter customer full name"
+            required
+            minlength="3">
+        </div>
+
+        <div class="form-row">
+
+          <div class="form-group">
+            <label for="customerEmail">Email Address *</label>
+
+            <input
+              type="email"
+              id="customerEmail"
+              name="customerEmail"
+              [(ngModel)]="customerEmail"
+              placeholder="example@email.com"
+              required
+              email>
+          </div>
+
+          <div class="form-group">
+            <label for="customerPhone">Phone Number *</label>
+
+            <input
+              type="tel"
+              id="customerPhone"
+              name="customerPhone"
+            [(ngModel)]="customerPhone"
+              placeholder="Enter phone number"
+              required
+              pattern="[0-9]{10}">
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <label for="customerAge">Customer Age *</label>
+
+          <input
+            type="number"
+            id="customerAge"
+            name="customerAge"
+            [(ngModel)]="customerAge"
+            placeholder="Enter age"
+            min="18"
+            max="100"
+            required>
+        </div>
+
+      </section>
+
+      <!-- Actions -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="reset-btn"
+          (click)="resetForm()">
+
+          Reset
+
+        </button>
+
+        <button
+          type="submit"
+          class="generate-btn"
+          [disabled]="quoteForm.invalid || !selectedPolicy">
+
+          Generate Quote
+
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- Quote Result -->
+    <section class="quote-result">
+
+      <div class="result-placeholder" *ngIf="!quoteGenerated">
+
+        <div class="placeholder-icon">₹</div>
+
+        <h2>Your Quote Will Appear Here</h2>
+
+        <p>
+          Select a policy and enter the customer information.
+          Click Generate Quote to view the estimated premium.
+        </p>
+
+      </div>
+
+      <div class="result-content" *ngIf="quoteGenerated">
+
+        <div class="success-icon">✓</div>
+
+        <h2>Quote Generated Successfully!</h2>
+
+        <p class="result-subtitle">
+          Your estimated insurance quotation is ready.
+        </p>
+
+        <div class="result-details">
+
+          <div class="detail-item">
+            <span>Customer Name</span>
+            <strong>{{ customerName }}</strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Email Address</span>
+            <strong>{{ customerEmail }}</strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Phone Number</span>
+            <strong>{{ customerPhone }}</strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Selected Policy</span>
+            <strong>{{ selectedPolicy?.policyName }}</strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Coverage Amount</span>
+            <strong>{{ selectedPolicy?.coverageAmount | currency:'INR' }}</strong>
+          </div>
+
+        </div>
+
+        <div class="premium-box">
+
+          <span>Estimated Premium</span>
+
+          <h1>{{ estimatedPremium | currency:'INR' }}</h1>
+
+          <p>Illustrative estimate based on the selected policy and age.</p>
+
+        </div>
+
+        <button
+          type="button"
+          class="new-quote-btn"
+          (click)="resetForm()">
+
+          Generate Another Quote
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</div>

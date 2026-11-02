@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [],
   selector: 'app-policy-management',
-  styleUrl: './policy-management.css',
+  standalone: true,
+  imports: [RouterLink, RouterOutlet],
   templateUrl: './policy-management.html',
+  styleUrl: './policy-management.css'
 })
 export class PolicyManagement {}
