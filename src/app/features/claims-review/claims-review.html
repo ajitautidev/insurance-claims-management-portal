@@ -1,1 +1,545 @@
-<p>claims-review works!</p>
+
+<main class="review-page">
+
+  <!-- Page Header -->
+  <header class="page-heading">
+    <div>
+      <p class="eyebrow">INSURANCE OPERATIONS</p>
+      <h1>Claims review</h1>
+      <p class="page-subtitle">
+        Review submitted claims, verify details and record decisions.
+      </p>
+    </div>
+
+    <div class="heading-meta">
+      <span class="live-dot"></span>
+      <span>Live claim data</span>
+    </div>
+  </header>
+
+  <!-- Claims Summary -->
+  <section class="metrics-grid" aria-label="Claim summary">
+
+    <article class="metric-card">
+      <span class="metric-label">Total claims</span>
+      <strong>{{ totalClaims }}</strong>
+      <span class="metric-caption">All received claims</span>
+    </article>
+
+    <article class="metric-card metric-submitted">
+      <span class="metric-label">Submitted</span>
+      <strong>{{ submittedCount }}</strong>
+      <span class="metric-caption">Awaiting review</span>
+    </article>
+
+    <article class="metric-card metric-review">
+      <span class="metric-label">Under review</span>
+      <strong>{{ underReviewCount }}</strong>
+      <span class="metric-caption">Currently being assessed</span>
+    </article>
+
+    <article class="metric-card metric-approved">
+      <span class="metric-label">Approved</span>
+      <strong>{{ approvedCount }}</strong>
+      <span class="metric-caption">Approved claims</span>
+    </article>
+
+    <article class="metric-card metric-rejected">
+      <span class="metric-label">Rejected</span>
+      <strong>{{ rejectedCount }}</strong>
+      <span class="metric-caption">Rejected claims</span>
+    </article>
+
+  </section>
+
+  <!-- Feedback -->
+  @if (feedbackMessage) {
+    <div class="feedback" role="status">
+      {{ feedbackMessage }}
+    </div>
+  }
+
+  <!-- Claims Dashboard -->
+  <section class="claims-panel">
+
+    <div class="panel-heading">
+      <div>
+        <h2>Claims queue</h2>
+        <p>Search and filter claims before opening a case.</p>
+      </div>
+
+      <span class="result-count">
+        {{ filteredClaims.length }} results
+      </span>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="toolbar">
+
+      <label class="search-box">
+        <span aria-hidden="true">⌕</span>
+
+        <input
+          type="search"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="applyFilters()"
+          placeholder="Search claim number, customer or policy ID"
+          aria-label="Search claims"
+        />
+      </label>
+
+      <label class="filter-control">
+        <span>Status</span>
+
+        <select
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="applyFilters()"
+          aria-label="Filter by status"
+        >
+          <option value="All">All statuses</option>
+          <option value="Submitted">Submitted</option>
+          <option value="Under Review">Under Review</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </label>
+
+    </div>
+
+    <!-- Claims Table -->
+    <div class="table-wrap">
+      <table>
+
+        <thead>
+          <tr>
+            <th>Claim</th>
+            <th>Customer</th>
+            <th>Policy</th>
+            <th>Claim amount</th>
+            <th>Submission date</th>
+            <th>Status</th>
+            <th>
+              <span class="sr-only">Action</span>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (claim of filteredClaims; track trackClaim($index, claim)) {
+            <tr>
+
+              <td>
+                <strong class="claim-number">
+                  {{ claim.claimNumber }}
+                </strong>
+
+                <span class="cell-muted">
+                  ID: {{ claim.id }}
+                </span>
+              </td>
+
+              <td>{{ claim.customerName }}</td>
+
+              <td>Policy #{{ claim.policyId }}</td>
+
+              <td class="amount">
+                {{ claim.claimAmount | currency:'INR':'symbol':'1.0-0' }}
+              </td>
+
+              <td>
+                {{ claim.claimDate | date:'dd MMM yyyy' }}
+              </td>
+
+              <td>
+                <span
+                  class="status-pill"
+                  [attr.data-status]="claim.status"
+                >
+                  {{ claim.status }}
+                </span>
+              </td>
+
+              <td>
+                <button
+                  class="text-button"
+                  type="button"
+                  (click)="openDetails(claim)"
+                >
+                  Review <span aria-hidden="true">→</span>
+                </button>
+              </td>
+
+            </tr>
+          } @empty {
+
+            <tr>
+              <td colspan="7">
+
+                <div class="empty-state">
+                  <span class="empty-icon">⌕</span>
+
+                  <strong>No claims found</strong>
+
+                  <p>
+                    @if (claims.length === 0) {
+                      Submitted claims will appear here when they are
+                      added through the shared ClaimService.
+                    } @else {
+                      Try changing your search or status filter.
+                    }
+                  </p>
+                </div>
+
+              </td>
+            </tr>
+
+          }
+
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- Claim Details Drawer -->
+  @if (selectedClaim) {
+
+    <div
+      class="drawer-backdrop"
+      (click)="closeDetails()"
+      (keydown.escape)="closeDetails()"
+    >
+
+      <aside
+        class="details-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="details-title"
+        (click)="$event.stopPropagation()"
+      >
+
+        <!-- Drawer Header -->
+        <div class="drawer-header">
+
+          <div>
+            <p class="eyebrow">CLAIM FILE</p>
+            <h2 id="details-title">
+              {{ selectedClaim.claimNumber }}
+            </h2>
+          </div>
+
+          <button
+            class="icon-button"
+            type="button"
+            aria-label="Close claim details"
+            (click)="closeDetails()"
+          >
+            ×
+          </button>
+
+        </div>
+
+        <div class="drawer-content">
+
+          <!-- Claim Overview -->
+          <section class="detail-section">
+
+            <div class="section-title-row">
+              <h3>Claim overview</h3>
+
+              <span
+                class="status-pill"
+                [attr.data-status]="selectedClaim.status"
+              >
+                {{ selectedClaim.status }}
+              </span>
+            </div>
+
+            <div class="detail-grid">
+
+              <div>
+                <span>Claim amount</span>
+                <strong>
+                  {{ selectedClaim.claimAmount | currency:'INR':'symbol':'1.0-0' }}
+                </strong>
+              </div>
+
+              <div>
+                <span>Submitted on</span>
+                <strong>
+                  {{ selectedClaim.claimDate | date:'dd MMM yyyy' }}
+                </strong>
+              </div>
+
+              <div>
+                <span>Claim ID</span>
+                <strong>{{ selectedClaim.id }}</strong>
+              </div>
+
+              <div>
+                <span>Policy ID</span>
+                <strong>{{ selectedClaim.policyId }}</strong>
+              </div>
+
+            </div>
+
+            <div class="description-block">
+              <span>Incident description</span>
+              <p>{{ selectedClaim.description }}</p>
+            </div>
+
+          </section>
+
+          <!-- Customer Information -->
+          <section class="detail-section">
+
+            <h3>Customer information</h3>
+
+            <div class="customer-card">
+
+              <div class="avatar">
+                {{ selectedClaim.customerName.charAt(0).toUpperCase() }}
+              </div>
+
+              <div>
+                <strong>{{ selectedClaim.customerName }}</strong>
+                <span>Customer ID: {{ selectedClaim.customerId }}</span>
+              </div>
+
+            </div>
+
+            <p class="helper-text">
+              Additional contact details are not currently exposed
+              by the shared customer data service.
+            </p>
+
+          </section>
+
+          <!-- Policy Information -->
+          <section class="detail-section">
+
+            <h3>Associated policy</h3>
+
+            @if (selectedPolicy) {
+
+              <div class="policy-card">
+
+                <div>
+                  <span>Policy number</span>
+                  <strong>{{ selectedPolicy.policyNumber }}</strong>
+                </div>
+
+                <div>
+                  <span>Policy name</span>
+                  <strong>{{ selectedPolicy.policyName }}</strong>
+                </div>
+
+                <div>
+                  <span>Category</span>
+                  <strong>{{ selectedPolicy.category }}</strong>
+                </div>
+
+                <div>
+                  <span>Coverage amount</span>
+                  <strong>
+                    {{ selectedPolicy.coverageAmount | currency:'INR':'symbol':'1.0-0' }}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Policy status</span>
+                  <strong>{{ selectedPolicy.status }}</strong>
+                </div>
+
+              </div>
+
+            } @else {
+
+              <p class="helper-text">
+                No matching policy record was found for policy ID
+                {{ selectedClaim.policyId }}.
+              </p>
+
+            }
+
+          </section>
+
+          <!-- Uploaded Documents -->
+          <section class="detail-section">
+
+            <h3>
+              Uploaded documents
+              <span class="count-chip">
+                {{ selectedClaim.documents.length }}
+              </span>
+            </h3>
+
+            @if (selectedClaim.documents.length) {
+
+              <div class="document-list">
+
+                @for (document of selectedClaim.documents; track document.id) {
+
+                  <div class="document-row">
+
+                    <div class="document-icon">PDF</div>
+
+                    <div class="document-info">
+                      <strong>{{ document.fileName }}</strong>
+
+                      <span>
+                        {{ document.fileType }} ·
+                        {{ (document.fileSize / 1024) | number:'1.0-0' }} KB ·
+                        {{ document.uploadedAt | date:'dd MMM yyyy' }}
+                      </span>
+                    </div>
+
+                    <span class="preview-unavailable">
+                      Metadata only
+                    </span>
+
+                  </div>
+
+                }
+
+              </div>
+
+              <p class="helper-text">
+                Preview is unavailable because the shared
+                UploadedDocument model currently stores metadata only.
+              </p>
+
+            } @else {
+
+              <p class="helper-text">
+                No documents were attached to this claim.
+              </p>
+
+            }
+
+          </section>
+
+          <!-- Review Actions -->
+          <section class="detail-section">
+
+            <h3>Review decision</h3>
+
+            <div class="decision-actions">
+
+              <button
+                type="button"
+                class="secondary-action"
+                [disabled]="
+                  isUpdatingStatus ||
+                  selectedClaim.status === 'Under Review'
+                "
+                (click)="updateStatus('Under Review')"
+              >
+                Mark under review
+              </button>
+
+              <button
+                type="button"
+                class="approve-action"
+                [disabled]="
+                  isUpdatingStatus ||
+                  selectedClaim.status === 'Approved' ||
+                  selectedClaim.status === 'Rejected'
+                "
+                (click)="updateStatus('Approved')"
+              >
+                Approve claim
+              </button>
+
+              <button
+                type="button"
+                class="reject-action"
+                [disabled]="
+                  isUpdatingStatus ||
+                  selectedClaim.status === 'Approved' ||
+                  selectedClaim.status === 'Rejected'
+                "
+                (click)="updateStatus('Rejected')"
+              >
+                Reject claim
+              </button>
+
+            </div>
+
+            <p class="helper-text">
+              A confirmation is required before each status change.
+              Final decisions cannot be changed from this screen.
+            </p>
+
+          </section>
+
+          <!-- Case Notes -->
+          <section class="detail-section notes-section">
+
+            <h3>Case notes</h3>
+
+            <label class="note-label" for="review-note">
+              Add an internal review note
+            </label>
+
+            <textarea
+              id="review-note"
+              [(ngModel)]="noteText"
+              rows="3"
+              maxlength="1000"
+              placeholder="Record observations, verification details or follow-up requirements..."
+            ></textarea>
+
+            <div class="note-footer">
+
+              <span>{{ noteText.length }}/1000</span>
+
+              <button
+                class="primary-action"
+                type="button"
+                [disabled]="!noteText.trim()"
+                (click)="addNote()"
+              >
+                Save note
+              </button>
+
+            </div>
+
+            @if (reviewNotes.length) {
+
+              <div class="notes-list">
+
+                @for (note of reviewNotes; track trackNote($index, note)) {
+
+                  <article class="note-card">
+
+                    <p>{{ note.text }}</p>
+
+                    <time [attr.datetime]="note.createdAt">
+                      {{ note.createdAt | date:'dd MMM yyyy, h:mm a' }}
+                    </time>
+
+                  </article>
+
+                }
+
+              </div>
+
+            } @else {
+
+              <p class="helper-text">
+                No review notes have been added to this claim.
+              </p>
+
+            }
+
+          </section>
+
+        </div>
+      </aside>
+    </div>
+
+  }
+
+</main>
