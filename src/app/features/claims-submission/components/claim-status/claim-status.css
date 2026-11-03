@@ -1,0 +1,123 @@
+
+.tracking-container {
+  background: #ffffff;
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
+.tracking-container h3 {
+  color: #172554;
+  margin: 0 0 25px;
+}
+
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  gap: 10px;
+}
+
+.timeline-step {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.timeline-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  background: #e2e8f0;
+  width: 100%;
+  left: 50%;
+  top: 17px;
+  z-index: 0;
+}
+
+.timeline-step.completed:not(:last-child)::after {
+  background: #16a34a;
+}
+
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.timeline-step.completed .step-circle {
+  background: #16a34a;
+  color: white;
+}
+
+.timeline-step.active .step-circle {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 0 0 5px #dbeafe;
+}
+
+.timeline-step.rejected .step-circle {
+  background: #dc2626;
+  color: white;
+  box-shadow: 0 0 0 5px #fee2e2;
+}
+
+.step-info strong {
+  display: block;
+  font-size: 13px;
+  color: #334155;
+}
+
+.step-info small {
+  display: block;
+  color: #94a3b8;
+  margin-top: 5px;
+  font-size: 11px;
+}
+
+.current-status {
+  margin-top: 25px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.current-status strong {
+  color: #2563eb;
+}
+
+.current-status .rejected-text {
+  color: #dc2626;
+}
+
+@media (max-width: 500px) {
+  .tracking-container {
+    padding: 15px;
+  }
+
+  .timeline {
+    gap: 3px;
+  }
+
+  .step-info strong {
+    font-size: 11px;
+  }
+
+  .step-info small {
+    font-size: 9px;
+  }
+}

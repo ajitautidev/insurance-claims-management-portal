@@ -1,0 +1,261 @@
+
+<div class="claim-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Submit Insurance Claim</h1>
+      <p>Complete the form below to submit your insurance claim.</p>
+    </div>
+  </div>
+
+  <form
+    [formGroup]="claimForm"
+    (ngSubmit)="submitClaim()"
+    class="claim-form"
+  >
+
+    <!-- Policy Information -->
+    <section class="form-section">
+
+      <h2>01. Policy Information</h2>
+
+      <div class="form-group">
+
+        <label>Select Insurance Policy *</label>
+
+        <select formControlName="policyId">
+
+          <option value="">Select a policy</option>
+
+          <option
+            *ngFor="let policy of policies"
+            [value]="policy.id"
+            [disabled]="policy.status !== 'Active'"
+          >
+            {{ policy.policyNumber }} -
+            {{ policy.policyName }}
+            ({{ policy.status }})
+          </option>
+
+        </select>
+
+        <small
+          class="error"
+          *ngIf="formControls['policyId'].touched &&
+                 formControls['policyId'].invalid"
+        >
+          Please select an insurance policy.
+        </small>
+
+      </div>
+
+    </section>
+
+
+    <!-- Customer Information -->
+    <section class="form-section">
+
+      <h2>02. Customer Information</h2>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Customer ID *</label>
+
+          <input
+            type="number"
+            formControlName="customerId"
+            placeholder="Enter customer ID"
+          />
+
+          <small
+            class="error"
+            *ngIf="formControls['customerId'].touched &&
+                   formControls['customerId'].invalid"
+          >
+            Customer ID is required.
+          </small>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Customer Name *</label>
+
+          <input
+            type="text"
+            formControlName="customerName"
+            placeholder="Enter full name"
+          />
+
+          <small
+            class="error"
+            *ngIf="formControls['customerName'].touched &&
+                   formControls['customerName'].invalid"
+          >
+            Customer name is required.
+          </small>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Email Address *</label>
+
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="example@gmail.com"
+          />
+
+          <small
+            class="error"
+            *ngIf="formControls['email'].touched &&
+                   formControls['email'].invalid"
+          >
+            Please enter a valid email address.
+          </small>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Mobile Number *</label>
+
+          <input
+            type="tel"
+            formControlName="phone"
+            maxlength="10"
+            placeholder="Enter 10 digit mobile number"
+          />
+
+          <small
+            class="error"
+            *ngIf="formControls['phone'].touched &&
+                   formControls['phone'].invalid"
+          >
+            Enter a valid 10-digit mobile number.
+          </small>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Claim Information -->
+    <section class="form-section">
+
+      <h2>03. Claim Information</h2>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Claim Amount (₹) *</label>
+
+          <input
+            type="number"
+            formControlName="claimAmount"
+            placeholder="Enter claim amount"
+          />
+
+          <small
+            class="error"
+            *ngIf="formControls['claimAmount'].touched &&
+                   formControls['claimAmount'].invalid"
+          >
+            Enter a claim amount greater than zero.
+          </small>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Claim Date *</label>
+
+          <input
+            type="date"
+            formControlName="claimDate"
+            [max]="today"
+          />
+
+          <small
+            class="error"
+            *ngIf="formControls['claimDate'].touched &&
+                   formControls['claimDate'].invalid"
+          >
+            Please select the claim date.
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Claim Description *</label>
+
+        <textarea
+          rows="5"
+          formControlName="description"
+          placeholder="Explain the reason for your claim (minimum 20 characters)"
+        ></textarea>
+
+        <small
+          class="error"
+          *ngIf="formControls['description'].touched &&
+                 formControls['description'].invalid"
+        >
+          Description must contain at least 20 characters.
+        </small>
+
+      </div>
+
+    </section>
+
+
+    <!-- Document Upload -->
+   <section class="form-section">
+  <h2>04. Supporting Documents</h2>
+
+  <app-document-upload
+    (documentsChanged)="onDocumentsChanged($event)">
+  </app-document-upload>
+</section>
+
+
+    <!-- Submit Buttons -->
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="reset-btn"
+        (click)="claimForm.reset(); isSubmitted = false"
+      >
+        Reset Form
+      </button>
+
+      <button
+        type="submit"
+        class="submit-btn"
+      >
+        Submit Claim
+      </button>
+
+    </div>
+
+    <div class="success-message" *ngIf="isSubmitted">
+      Claim submitted successfully!
+    </div>
+
+  </form>
+
+</div>

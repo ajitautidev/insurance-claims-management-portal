@@ -1,1 +1,49 @@
-<p>customer-profiles works!</p>
+<section class="customers-page">
+  <div class="page-header">
+    <h1>Customer Profiles</h1>
+    <p>View customer contact information and profile details.</p>
+  </div>
+
+  <div class="search">
+    <input
+      type="text"
+      placeholder="Search customers by name, email, phone or ID"
+      [(ngModel)]="searchText"
+    />
+  </div>
+
+  <div class="customer-grid">
+    <article
+      class="customer-card"
+      *ngFor="let customer of filteredCustomers; trackBy: trackByCustomerId"
+    >
+      <div class="avatar">
+        {{ customer.fullName.charAt(0).toUpperCase() }}
+      </div>
+
+      <h2>{{ customer.fullName }}</h2>
+      <p class="customer-id">Customer ID: {{ customer.id }}</p>
+
+      <div class="customer-info">
+        <p>
+          <strong>Email</strong>
+          <span>{{ customer.email }}</span>
+        </p>
+
+        <p>
+          <strong>Phone</strong>
+          <span>{{ customer.phone }}</span>
+        </p>
+
+        <p>
+          <strong>Address</strong>
+          <span>{{ customer.address }}</span>
+        </p>
+      </div>
+    </article>
+  </div>
+
+  <div class="empty" *ngIf="filteredCustomers.length === 0">
+    No customers found.
+  </div>
+</section>

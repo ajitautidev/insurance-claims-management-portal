@@ -1,0 +1,115 @@
+.catalogue {
+  padding: 28px;
+  color: #1e293b;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.page-header p {
+  color: #64748b;
+}
+
+.filters {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.filters input,
+.filters select {
+  padding: 12px 14px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  background: white;
+  font: inherit;
+}
+
+.filters input {
+  flex: 1;
+  min-width: 220px;
+}
+
+.policy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.policy-card {
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.category,
+.status {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #f1f5f9;
+}
+
+.status.active {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.policy-card h2 {
+  margin: 20px 0 6px;
+  font-size: 19px;
+}
+
+.policy-number {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.details div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.details span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.policy-card button {
+  width: 100%;
+  padding: 11px;
+  border: 0;
+  border-radius: 8px;
+  color: white;
+  background: #2563eb;
+  cursor: pointer;
+}
+
+.empty,
+.error {
+  margin-top: 24px;
+  color: #64748b;
+}
