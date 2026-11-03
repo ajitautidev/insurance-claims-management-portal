@@ -1,0 +1,128 @@
+
+<div class="reports-container">
+
+  <div class="heading-row">
+    <div>
+      <h2>Admin Reports</h2>
+      <p class="subtitle">Filter, review and export claim reports</p>
+    </div>
+
+    <button class="export-btn" (click)="exportCSV()">
+      Export CSV
+    </button>
+  </div>
+
+  <section class="filter-card">
+    <h3>Report Filters</h3>
+
+    <div class="filter-grid">
+      <div>
+        <label for="startDate">Start Date</label>
+        <input
+          id="startDate"
+          type="date"
+          [(ngModel)]="startDate"
+        />
+      </div>
+
+      <div>
+        <label for="endDate">End Date</label>
+        <input
+          id="endDate"
+          type="date"
+          [(ngModel)]="endDate"
+        />
+      </div>
+
+      <div>
+        <label for="status">Claim Status</label>
+        <select id="status" [(ngModel)]="selectedStatus">
+          <option *ngFor="let status of statuses" [ngValue]="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button class="clear-btn" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <h3>Total Claims</h3>
+      <p>{{ totalClaims }}</p>
+    </div>
+
+    <div class="summary-card">
+      <h3>Approved</h3>
+      <p>{{ approvedCount }}</p>
+    </div>
+
+    <div class="summary-card">
+      <h3>Rejected</h3>
+      <p>{{ rejectedCount }}</p>
+    </div>
+
+    <div class="summary-card">
+      <h3>Under Review</h3>
+      <p>{{ underReviewCount }}</p>
+    </div>
+
+    <div class="summary-card">
+      <h3>Total Claim Amount</h3>
+      <p>{{ totalAmount | currency:'INR':'symbol':'1.0-0' }}</p>
+    </div>
+  </div>
+
+  <section class="table-card">
+    <h3>Claims Report</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Claim Number</th>
+            <th>Customer</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let claim of filteredClaims">
+            <td>{{ claim.claimNumber }}</td>
+            <td>{{ claim.customerName }}</td>
+            <td>{{ getPolicyCategory(claim.policyId) }}</td>
+            <td>{{ claim.claimAmount | currency:'INR':'symbol':'1.0-0' }}</td>
+            <td>{{ claim.claimDate | date:'mediumDate' }}</td>
+            <td>
+              <span
+                class="status"
+                [ngClass]="{
+                  'approved': claim.status === 'Approved',
+                  'rejected': claim.status === 'Rejected',
+                  'review': claim.status === 'Under Review',
+                  'submitted': claim.status === 'Submitted'
+                }">
+                {{ claim.status }}
+              </span>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredClaims.length === 0">
+            <td colspan="6" class="empty">
+              No claims found for the selected filters.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>

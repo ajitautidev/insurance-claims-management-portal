@@ -1,0 +1,53 @@
+
+.dashboard-container {
+  padding: 24px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  color: #172554;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 22px;
+  border-radius: 12px;
+  border-left: 5px solid #2563eb;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card h3 {
+  font-size: 15px;
+  color: #64748b;
+}
+
+.stat-card p {
+  font-size: 27px;
+  font-weight: bold;
+  color: #172554;
+  overflow-wrap: anywhere;
+}
+
+.approved { border-color: #16a34a; }
+.rejected { border-color: #dc2626; }
+.review { border-color: #d97706; }
+.submitted { border-color: #7c3aed; }
+.amount { border-color: #0891b2; }
+
+@media (max-width: 600px) {
+  .dashboard-container {
+    padding: 14px;
+  }
+}
