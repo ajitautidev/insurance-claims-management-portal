@@ -1,1 +1,48 @@
-<p>policy-details works!</p>
+<section class="details-page">
+  <button class="back-button" type="button" (click)="goBack()">
+    ← Back to Policies
+  </button>
+
+  <p *ngIf="loading">Loading policy details...</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <article class="details-card" *ngIf="policy as p">
+    <div class="heading">
+      <div>
+        <span class="category">{{ p.category }}</span>
+        <h1>{{ p.policyName }}</h1>
+        <p>Policy Number: {{ p.policyNumber }}</p>
+      </div>
+
+      <span class="status">{{ p.status }}</span>
+    </div>
+
+    <div class="amount-grid">
+      <div class="amount">
+        <span>Premium</span>
+        <strong>{{ p.premium | currency:'INR' }}</strong>
+      </div>
+
+      <div class="amount">
+        <span>Coverage Amount</span>
+        <strong>{{ p.coverageAmount | currency:'INR' }}</strong>
+      </div>
+    </div>
+
+    <div class="information">
+      <h2>Policy Information</h2>
+      <p><strong>Policy Name:</strong> {{ p.policyName }}</p>
+      <p><strong>Policy Number:</strong> {{ p.policyNumber }}</p>
+      <p><strong>Category:</strong> {{ p.category }}</p>
+      <p><strong>Status:</strong> {{ p.status }}</p>
+    </div>
+
+    <div class="information">
+      <h2>Terms and Benefits</h2>
+      <p>
+        Refer to the official policy document for complete coverage terms,
+        exclusions, eligibility requirements and benefits.
+      </p>
+    </div>
+  </article>
+</section>

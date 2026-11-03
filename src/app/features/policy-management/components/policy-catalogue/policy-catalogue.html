@@ -1,1 +1,70 @@
-<p>policy-catalogue works!</p>
+<section class="catalogue">
+  <div class="page-header">
+    <div>
+      <h1>Policy Catalogue</h1>
+      <p>Explore and manage available insurance policies.</p>
+    </div>
+  </div>
+
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search by policy name, number or category"
+      [(ngModel)]="searchText"
+    />
+
+    <select [(ngModel)]="selectedCategory">
+      <option value="All">All Categories</option>
+      <option *ngFor="let category of categories.slice(1)" [value]="category">
+        {{ category }}
+      </option>
+    </select>
+
+    <select [(ngModel)]="selectedStatus">
+      <option value="All">All Statuses</option>
+      <option value="Active">Active</option>
+      <option value="Expired">Expired</option>
+      <option value="Pending">Pending</option>
+    </select>
+  </div>
+
+  <p *ngIf="loading">Loading policies...</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="policy-grid" *ngIf="!loading">
+    <article
+      class="policy-card"
+      *ngFor="let policy of filteredPolicies; trackBy: trackByPolicyId"
+    >
+      <div class="card-top">
+        <span class="category">{{ policy.category }}</span>
+        <span class="status" [class.active]="policy.status === 'Active'">
+          {{ policy.status }}
+        </span>
+      </div>
+
+      <h2>{{ policy.policyName }}</h2>
+      <p class="policy-number">{{ policy.policyNumber }}</p>
+
+      <div class="details">
+        <div>
+          <span>Premium</span>
+          <strong>{{ policy.premium | currency:'INR' }}</strong>
+        </div>
+
+        <div>
+          <span>Coverage Amount</span>
+          <strong>{{ policy.coverageAmount | currency:'INR' }}</strong>
+        </div>
+      </div>
+
+      <button type="button" (click)="viewDetails(policy)">
+        View Details
+      </button>
+    </article>
+  </div>
+
+  <div class="empty" *ngIf="!loading && filteredPolicies.length === 0">
+    No policies found.
+  </div>
+</section>
