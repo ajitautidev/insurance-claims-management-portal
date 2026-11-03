@@ -1,0 +1,432 @@
+
+<div class="history-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>Claim History</h1>
+      <p>Monitor, manage and track your insurance claims.</p>
+    </div>
+
+    <div class="total-claims">
+      <span>Total Claims</span>
+      <strong>{{ claims.length }}</strong>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-grid">
+
+    <div class="summary-card total-card">
+      <span>Total Claims</span>
+      <h2>{{ claims.length }}</h2>
+    </div>
+
+    <div class="summary-card submitted-card">
+      <span>Submitted</span>
+      <h2>{{ submittedCount }}</h2>
+    </div>
+
+    <div class="summary-card review-card">
+      <span>Under Review</span>
+      <h2>{{ underReviewCount }}</h2>
+    </div>
+
+    <div class="summary-card approved-card">
+      <span>Approved</span>
+      <h2>{{ approvedCount }}</h2>
+    </div>
+
+    <div class="summary-card rejected-card">
+      <span>Rejected</span>
+      <h2>{{ rejectedCount }}</h2>
+    </div>
+
+  </div>
+
+  <!-- Search and Filter -->
+  <div class="filter-section">
+
+    <div class="search-box">
+      <span>⌕</span>
+      <input
+        type="text"
+        placeholder="Search claim number, customer or description..."
+        [value]="searchText"
+        (input)="onSearchChange($event)"
+      />
+    </div>
+
+    <select
+      [value]="selectedStatus"
+      (change)="onStatusChange($event)"
+    >
+      <option
+        *ngFor="let status of statuses"
+        [value]="status"
+      >
+        {{ status }}
+      </option>
+    </select>
+
+  </div>
+
+  <!-- Claims Table -->
+  <div class="table-container">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Claim Number</th>
+          <th>Customer</th>
+          <th>Claim Date</th>
+          <th>Claim Amount</th>
+          <th>Documents</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr
+          *ngFor="let claim of filteredClaims; trackBy: trackByClaimId"
+        >
+
+          <td>
+            <strong class="claim-number">
+              {{ claim.claimNumber }}
+            </strong>
+          </td>
+
+          <td>{{ claim.customerName }}</td>
+
+          <td>{{ claim.claimDate | date:'dd MMM yyyy' }}</td>
+
+          <td>
+            {{ claim.claimAmount | currency:'INR':'symbol':'1.0-0' }}
+          </td>
+
+          <td>
+            <span class="document-count">
+              {{ claim.documents.length }} Files
+            </span>
+          </td>
+
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="getStatusClass(claim.status)"
+            >
+              {{ claim.status }}
+            </span>
+          </td>
+
+          <td>
+            <button
+              type="button"
+              class="view-btn"
+              (click)="viewClaim(claim)"
+            >
+              View Details
+            </button>
+          </td>
+
+        </tr>
+
+        <tr *ngIf="filteredClaims.length === 0">
+          <td colspan="7" class="empty-state">
+            <div class="empty-icon">📋</div>
+            <h3>No claims found</h3>
+            <p>Try changing your search or status filter.</p>
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- Claim Tracking -->
+  <div
+    class="claim-details"
+    *ngIf="filteredClaims.length > 0"
+  >
+
+    <div class="tracking-heading">
+      <h2>Claim Tracking</h2>
+      <p>Follow the progress of your submitted claims.</p>
+    </div>
+
+    <div
+      class="description-card"
+      *ngFor="let claim of filteredClaims"
+    >
+
+      <div class="description-header">
+
+        <div>
+          <strong>{{ claim.claimNumber }}</strong>
+          <p>{{ claim.customerName }}</p>
+        </div>
+
+        <span
+          class="status-badge"
+          [ngClass]="getStatusClass(claim.status)"
+        >
+          {{ claim.status }}
+        </span>
+
+      </div>
+
+      <p class="claim-description">
+        {{ claim.description }}
+      </p>
+
+      <div class="claim-meta">
+        <span>
+          Claim Amount:
+          {{ claim.claimAmount | currency:'INR':'symbol':'1.0-0' }}
+        </span>
+
+        <span>
+          Documents: {{ claim.documents.length }}
+        </span>
+      </div>
+
+      <app-claim-status
+        [status]="claim.status"
+      ></app-claim-status>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- Claim Details Popup -->
+<div
+  class="details-overlay"
+  *ngIf="selectedClaim as claim"
+  (click)="closeClaimDetails()"
+>
+
+  <div
+    class="details-modal"
+    (click)="$event.stopPropagation()"
+  >
+
+    <!-- Popup Header -->
+    <div class="details-header">
+
+      <div>
+        <span class="modal-label">CLAIM INFORMATION</span>
+        <h2>Claim Details</h2>
+        <p>{{ claim.claimNumber }}</p>
+      </div>
+
+      <button
+        type="button"
+        class="icon-close"
+        aria-label="Close details"
+        (click)="closeClaimDetails()"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <!-- Claim Status -->
+    <div class="modal-status">
+      <span>Current Status</span>
+
+      <span
+        class="status-badge"
+        [ngClass]="getStatusClass(claim.status)"
+      >
+        {{ claim.status }}
+      </span>
+    </div>
+
+    <!-- Customer Information -->
+    <section class="modal-section">
+
+      <h3>Customer Information</h3>
+
+      <div class="details-grid">
+
+        <div class="detail-item">
+          <span>Customer Name</span>
+          <strong>{{ claim.customerName }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Customer ID</span>
+          <strong>{{ claim.customerId }}</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Policy Information -->
+    <section class="modal-section">
+
+      <h3>Policy Information</h3>
+
+      <div class="details-grid">
+
+        <div class="detail-item">
+          <span>Policy ID</span>
+          <strong>{{ claim.policyId }}</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Claim Information -->
+    <section class="modal-section">
+
+      <h3>Claim Information</h3>
+
+      <div class="details-grid">
+
+        <div class="detail-item">
+          <span>Claim Date</span>
+          <strong>{{ claim.claimDate | date:'dd MMM yyyy' }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Claim Amount</span>
+          <strong>
+            {{ claim.claimAmount | currency:'INR':'symbol':'1.0-0' }}
+          </strong>
+        </div>
+
+      </div>
+
+      <div class="description-detail">
+        <span>Claim Description</span>
+        <p>{{ claim.description }}</p>
+      </div>
+
+    </section>
+
+    <!-- Supporting Documents with Update Feature -->
+    <section class="modal-section">
+
+      <div class="section-heading">
+
+        <h3>Supporting Documents</h3>
+
+        <button
+          type="button"
+          class="view-btn"
+          *ngIf="!editingDocuments"
+          (click)="startDocumentUpdate()"
+        >
+          Update Documents
+        </button>
+
+      </div>
+
+      <!-- Existing Documents -->
+      <div
+        class="document-list"
+        *ngIf="claim.documents.length > 0; else noDocuments"
+      >
+
+        <div
+          class="document-item"
+          *ngFor="let document of claim.documents"
+        >
+
+          <div class="document-icon">📄</div>
+
+          <div class="document-info">
+            <strong>{{ document.fileName }}</strong>
+
+            <span>
+              {{ document.fileType }} ·
+              {{ (document.fileSize / 1024).toFixed(1) }} KB
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <ng-template #noDocuments>
+        <p class="no-documents">
+          No supporting documents uploaded.
+        </p>
+      </ng-template>
+
+      <!-- Document Update Form -->
+      <div
+        *ngIf="editingDocuments"
+        class="document-editor"
+      >
+
+        <h4>Update Supporting Documents</h4>
+
+        <app-document-upload
+          [initialDocuments]="documentDraft"
+          (documentsChanged)="onDocumentDraftChanged($event)"
+        ></app-document-upload>
+
+        <div class="editor-actions">
+
+          <button
+            type="button"
+            class="save-btn"
+            (click)="saveUpdatedDocuments()"
+          >
+            Save Documents
+          </button>
+
+          <button
+            type="button"
+            class="cancel-btn"
+            (click)="cancelDocumentUpdate()"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Tracking Timeline -->
+    <section class="modal-section">
+
+      <h3>Claim Status Tracking</h3>
+
+      <app-claim-status
+        [status]="claim.status"
+      ></app-claim-status>
+
+    </section>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeClaimDetails()"
+      >
+        Close Details
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

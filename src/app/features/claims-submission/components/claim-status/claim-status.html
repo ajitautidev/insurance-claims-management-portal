@@ -1,0 +1,59 @@
+
+<div class="tracking-container">
+
+  <h3>Claim Progress</h3>
+
+  <div class="timeline">
+
+    <div
+      class="timeline-step"
+      [class.completed]="isCompleted(1)"
+      [class.active]="isActive(1)"
+    >
+      <div class="step-circle">1</div>
+
+      <div class="step-info">
+        <strong>Submitted</strong>
+        <small>Claim received</small>
+      </div>
+    </div>
+
+    <div
+      class="timeline-step"
+      [class.completed]="isCompleted(2)"
+      [class.active]="isActive(2)"
+    >
+      <div class="step-circle">2</div>
+
+      <div class="step-info">
+        <strong>Under Review</strong>
+        <small>Verification in progress</small>
+      </div>
+    </div>
+
+    <div
+      class="timeline-step"
+      [class.completed]="isCompleted(3)"
+      [class.active]="isActive(3)"
+      [class.rejected]="status === 'Rejected'"
+    >
+      <div class="step-circle">3</div>
+
+      <div class="step-info">
+        <strong>{{ finalStatus }}</strong>
+        <small>
+          {{ status === 'Rejected' ? 'Claim rejected' : 'Final decision' }}
+        </small>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="current-status">
+    Current Status:
+    <strong [class.rejected-text]="status === 'Rejected'">
+      {{ status }}
+    </strong>
+  </div>
+
+</div>

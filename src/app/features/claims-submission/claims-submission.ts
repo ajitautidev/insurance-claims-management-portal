@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
+import { ClaimForm } from './components/claims-form/claims-form';
+import { ClaimsHistory } from './pages/claims-history/claims-history';
 
 @Component({
-  imports: [],
   selector: 'app-claims-submission',
-  styleUrl: './claims-submission.css',
+  standalone: true,
+  imports: [ClaimForm, ClaimsHistory],
   templateUrl: './claims-submission.html',
+  styleUrl: './claims-submission.css'
 })
 export class ClaimsSubmission {}

@@ -1,0 +1,61 @@
+<div class="upload-container">
+
+  <div class="upload-heading">
+    <h3>Supporting Documents</h3>
+    <p>Upload bills, reports, receipts or other supporting documents.</p>
+  </div>
+
+  <label class="upload-area">
+
+    <span class="upload-icon">📁</span>
+
+    <strong>Click to select documents</strong>
+
+    <span>Maximum file size: 5 MB per file</span>
+
+    <input
+      type="file"
+      multiple
+      accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+      (change)="onFileSelected($event)"
+    />
+
+  </label>
+
+  <div class="document-list" *ngIf="documents.length > 0">
+
+    <h4>Selected Documents ({{ documents.length }})</h4>
+
+    <div
+      class="document-item"
+      *ngFor="let document of documents"
+    >
+
+      <div class="file-icon">📄</div>
+
+      <div class="file-details">
+        <strong>{{ document.fileName }}</strong>
+
+        <span>
+          {{ document.fileType }} ·
+          {{ (document.fileSize / 1024).toFixed(1) }} KB
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="remove-btn"
+        (click)="removeDocument(document.id)"
+      >
+        Remove
+      </button>
+
+    </div>
+
+  </div>
+
+  <p class="empty-message" *ngIf="documents.length === 0">
+    No documents selected yet.
+  </p>
+
+</div>
